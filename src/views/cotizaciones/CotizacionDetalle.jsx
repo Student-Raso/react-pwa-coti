@@ -10,11 +10,11 @@ import {
   Modal,
   Divider,
   Table,
-  Select,
+  Select as AntSelect,
   Upload,
   DatePicker,
   Tooltip,
-  InputNumber
+  InputNumber,
 } from 'antd';
 
 import ImgCrop from 'antd-img-crop';
@@ -36,6 +36,8 @@ import locale from 'antd/lib/date-picker/locale/es_ES'
 import { abrirArchivo } from "../../utilities";
 import 'moment/locale/es-mx';
 import httpService from '../../services/httpService';
+import { Select } from '../../components';
+
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -103,8 +105,15 @@ const CotizacionDetalle = () => {
       cliente: "Cliente: ",
       clienteNombre: model?.cliente?.nombre
     }
+    
+    const requestEmpresa = React.useMemo(() => ({
+      name: 'v1/empresa',
+    }), []);
 
-    console.log("model: ", model);
+    const requestCliente = React.useMemo(() => ({
+      name: 'v1/cliente',
+    }), []);
+  
 
     const btnGroup = [
       {
@@ -220,7 +229,13 @@ const CotizacionDetalle = () => {
       let _productos = [...productosTabla]
       
       //acceder al Indice y cambiar valor
-      _productos[indice][nombre] = parseFloat(valor)
+      if (nombre === "cantidad" || nombre === "monto") {
+        _productos[indice][nombre] = parseFloat(valor)
+      } else {
+        _productos[indice][nombre] = valor
+      }
+
+      console.log("_productos: ",_productos)
       
       // arreglo de productos
       setProductosTabla(_productos);
@@ -466,7 +481,7 @@ const CotizacionDetalle = () => {
     }
     //inicio de try catch antes de StatusResponse
     try {
-      const res = await httpService.post('cotizacion', body);
+      const res = await httpService.post('v1/cotizacion', body);
     
       if (res) {
         //Si estatus 400 y "errores" es diferente a nulo
@@ -538,17 +553,17 @@ const CotizacionDetalle = () => {
     }
   }, []);
   
-  useEffect(()=>{
-    if(empres){
-      setEmpresasSelect(empres)
-    }
-  },[empres])
+  // useEffect(()=>{
+  //   if(empres){
+  //     setEmpresasSelect(empres)
+  //   }
+  // },[empres])
 
-  useEffect(()=>{
-    if(clients){
-      setClientesSelect(clients)
-    }
-  },[clients])
+  // useEffect(()=>{
+  //   if(clients){
+  //     setClientesSelect(clients)
+  //   }
+  // },[clients])
 
   useEffect(() => {
     setCopia()
@@ -656,12 +671,15 @@ const CotizacionDetalle = () => {
                 >
                   <Select
                     showSearch
-                    filterOption={(input, option) => option?.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    optionFilterProp="label"
-                    loading={empresLoading}
-                    disabled={empresLoading}
-                    options={empresasSelect ? empresasSelect.map((c) => ({ key: c.id, value: c?.id, label: c?.nombre, item: c })) : []}
-                    placeholder="Selecciona una Empresa"
+                    modelsParams={requestEmpresa}
+                    placeholder={'Selecciona Empresa'}
+                    labelProp={'nombre'}
+                    valueProp={'id'}
+                    render={(_, row) => `${row?.nombre}`}
+                    onChange={(_, row) => {
+                      setEmpresasSelect(row);
+                      console.log(row);
+                    }}
                   />
                 </Form.Item>
               </Col>
@@ -699,12 +717,15 @@ const CotizacionDetalle = () => {
                 >
                   <Select
                     showSearch
-                    filterOption={(input, option) => option?.label.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                    optionFilterProp="label"
-                    loading={clientsLoading}
-                    disabled={clientsLoading}
-                    options={clientesSelect ? clientesSelect.map((c) => ({ key: c.id, value: c?.id, label: c?.nombre, item: c })) : []}
-                    placeholder="Selecciona un cliente"
+                    modelsParams={requestCliente}
+                    placeholder={'Selecciona Cliente'}
+                    labelProp={'nombre'}
+                    valueProp={'id'}
+                    render={(_, row) => `${row?.nombre}`}
+                    onChange={(_, row) => {
+                      setClientesSelect(row);
+                      console.log(row);
+                    }}
                   >
                   </Select>
                 </Form.Item>
