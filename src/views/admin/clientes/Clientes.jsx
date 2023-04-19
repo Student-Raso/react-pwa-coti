@@ -55,32 +55,32 @@ const Clientes = () => {
       ),
     },
     {
-      title: 'Clave',
-      key: 'vin_num_psg',
-      dataIndex: 'vin_num_psg',
+      title: 'Id',
+      key: 'id',
+      dataIndex: 'id',
       render: (_, item) => (
-        <Link to={`/psg/detalle?id=${item?.ID_vinculo}`} style={{color: "black"}}>
-          {item?.vin_num_psg}
+        <Link to={`/${url}/detalle?id=${item?.id}`} style={{color: "black"}}>
+          {item?.id}
         </Link>
       )
     },
     {
       title: 'Nombre',
-      key: 'vin_nombre_corral',
-      dataIndex: 'vin_nombre_corral',
+      key: 'nombre',
+      dataIndex: 'nombre',
       render: (_, item) => (
-        <Link to={`/psg/detalle?id=${item?.ID_vinculo}`} style={{color: "black"}}>
-          {item?.vin_nombre_corral}
+        <Link to={`/${url}/detalle?id=${item?.id}`} style={{color: "black"}}>
+          {item?.nombre}
         </Link>
       )
     },
     {
-      title: 'Empresa',
-      key: 'vin_nombre_corral',
-      dataIndex: 'vin_nombre_corral',
+      title: 'Responsable',
+      key: 'responsable',
+      dataIndex: 'responsable',
       render: (_, item) => (
-        <Link to={`/psg/detalle?id=${item?.ID_vinculo}`} style={{color: "black"}}>
-          {item?.empresa?.nombre}
+        <Link to={`/${url}/detalle?id=${item?.id}`} style={{color: "black"}}>
+          {item?.responsable}
         </Link>
       )
     }
@@ -97,8 +97,8 @@ const Clientes = () => {
       nameURL={endPoint}
       columns={columns}
       innerRef={tablaRef}
-      order={'ID_vinculo'}
-      extraParams={{ q: buscarValue, expand: 'empresa' }}
+      order={'id'}
+      extraParams={{ q: buscarValue, expand: '' }}
     />
   </SimpleTableLayout>;
 }

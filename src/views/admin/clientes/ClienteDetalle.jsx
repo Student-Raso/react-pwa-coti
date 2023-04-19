@@ -131,29 +131,14 @@ const ClienteDetalle = () => {
           </Col>
 
           <Col span={12}>
-            <Form.Item label='Correo' name='correo'>
-              <Input placeholder="Ingresar Correo"/>
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Row gutter={[10, 10]}>
-          <Col span={12}>
             <Form.Item label='Telèfono' name='telefono'>
               <Input placeholder="Ingresar Còdigo Postal"/>
             </Form.Item>
           </Col>
-
-          <Col span={12}>
-            <Form.Item label='Correo' name='correo'>
-              <Input placeholder="Ingresar Correo"/>
-            </Form.Item>
-          </Col>
         </Row>
 
         <Row gutter={[10, 10]}>
-
-          <Col span={12}>
+        <Col span={12}>
             <Form.Item
               label="Regimen Fiscal"
               name="idRegimen"
@@ -161,30 +146,43 @@ const ClienteDetalle = () => {
               <Select
                 showSearch
                 modelsParams={request}
-                size='large'
                 placeholder="Selecciona un règimen"
                 labelProp={'nombre'}
                 valueProp={'id'}
               />
             </Form.Item>
           </Col>
+
           <Col span={12}>
-            <Form.Item label='Ciudad' name='ciudad'>
-              <Input placeholder="Ingresar Ciudad"/>
+            <Form.Item label='Correo' name='correo'>
+              <Input placeholder="Ingresar Correo"/>
             </Form.Item>
           </Col>
         </Row>
 
         <Row gutter={[10, 10]}>
           <Col span={12}>
-            <Form.Item label='Estado' name='estado'>
-              <Input placeholder="Ingresar Estado"/>
+            <Form.Item label='Ciudad' name='ciudad'>
+              <Input placeholder="Ingresar Ciudad"/>
             </Form.Item>
           </Col>
 
           <Col span={12}>
+            <Form.Item label='Estado' name='estado'>
+              <Input placeholder="Ingresar Estado"/>
+            </Form.Item>
+          </Col>
+        </Row>
+
+        <Row gutter={[10, 10]}>
+          <Col span={12}>
             <Form.Item label='Prefijo' name='prefijo'>
               <Input placeholder="Ingresar Prefijo"/>
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item label='consecutivo' name='consecutivo'>
+              <Input placeholder="Ingresar Consecutivo"/>
             </Form.Item>
           </Col>
         </Row>
