@@ -5,15 +5,17 @@ import {
   LogoutOutlined,
   SettingOutlined,
   BarChartOutlined,
-  ImportOutlined,
+  CalculatorOutlined,
+  SlidersOutlined
 } from "@ant-design/icons";
 
 import {NoEncontrado, NoAutorizado} from "../views/error";
 import {Inicio} from "../views/inicio";
 import {Usuarios, UsuarioDetalle} from "../views/admin/usuarios";
-import {Entradas, EntradaDetalle} from "../views/entradas";
-import { tipoUsuarios } from "../constants";
 import { Perfil } from "../views/perfil";
+import { CotizacionDetalle, CotizacionListado } from "../views/cotizaciones";
+
+
 
 
 const signOutRoute = () => {
@@ -44,6 +46,39 @@ const dashboardRoutes = [
     icon: <HomeOutlined/>,
     sidebar: "single",
     element: Usuarios,
+  },
+  {
+    layout: "dashboard",
+    path: "/cotizaciones",
+    name: "Cotizaciones",
+    icon: <CalculatorOutlined  />,
+    sidebar: 'single',
+    routes: [
+      {
+        path: "/",
+        layout: "dashboard",
+        name: "Cotizaciones",
+        icon: <SlidersOutlined />,
+        sidebar: "single",
+        element: CotizacionListado,
+      },
+      {
+        path: "/nuevo",
+        layout: "dashboard",
+        name: "Nuevo",
+        icon: <SlidersOutlined />,
+        sidebar: "single",
+        element: CotizacionDetalle
+      },
+      {
+        path: "/editar",
+        layout: "dashboard",
+        name: "Edición",
+        icon: <SlidersOutlined />,
+        sidebar: "single",
+        element: CotizacionDetalle
+      }
+    ]
   },
   {
     layout:"dashboard",
