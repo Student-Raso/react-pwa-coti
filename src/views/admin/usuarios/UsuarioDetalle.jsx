@@ -13,11 +13,12 @@ import {
   Row,
   Select as AntdSelect,
   Switch,
+  Modal
 } from "antd";
 import { useNavigate } from "react-router-dom";
 import { DefaultLayout } from "../../../components/layouts";
 import { useModel, useQuery } from "../../../hooks";
-import { respuestas, Roles, ValidarContrasena } from "../../../utilities";
+import { Roles, ValidarContrasena } from "../../../utilities";
 import httpService from '../../../services/httpService';
 
 const UsuarioDetalle = () => {
@@ -53,62 +54,54 @@ const UsuarioDetalle = () => {
   ];
 
   const onFinish = async (values) => {
-    try {
-
-      const { clave1, clave } = values;
-
-      setGuardando(true);
-      let body;
-      if (!editando) {
-        if (clave1 !== clave) {
-          message.error("Las contraseñas no coinciden.");
-          return;
-        }
-        console.log("of !editing")
-
-        body = {
-          ...values,
-          pwd: clave
-        }
-
-      } else {
-        if (clave1 !== clave) {
-          message.error("Las contraseñas no coinciden.");
-          return;
-        }
-
-        let _body = {
-          pwd: clave1,
-          confirmarClave: clave,
-          idUsuario: id
-        }
-
-        const resClave = await httpService.post(`${endPoint}/cambiar-clave`, _body)
-        if (resClave?.status !== 200) {
-          respuestas(resClave);
-          return;
-        }
-
-        body = {
-          ...values,
-          id: id,
-        }
-        delete body.clave;
-        delete body.clave1;
-      }
-
-      const res = await httpService.post(endPoint, body);
-      respuestas(res);
-      if(res?.status === 200) {
-        navigate(`/administracion/usuarios`);
-      }
-      
-    } catch(e) {
-      console.log(e)
-    } finally {
-      setGuardando(false);
+    setGuardando(true)
+    const { correo, nombre, celular, direccion, rol, cargo, pwd, confirmarClave } = values
+    let body = {
+      correo,
+      nombre,
+      celular,
+      direccion,
+      rol,
+      cargo,
     }
-  }
+    try {
+      if (!editando) {
+        if(pwd !== confirmarClave) {
+          Modal.error({
+            title: "Error",
+            content: "Las contraseñas no coinciden",
+          })
+          setGuardando(false)
+          return
+        }
+        body.pwd = pwd
+        const { status } = await httpService.post(endPoint, body)
+        if (status === 200)
+          navigate("/administracion/usuarios")
+      } else {
+        if (pwd) {
+          if(pwd !== confirmarClave){
+            Modal.error({
+              title: "Error",
+              content: "Las contraseñas no coinciden",
+            })
+            setGuardando(false)
+            return
+          }
+          await httpService.post(`${endPoint}/cambiar-clave`, { id: model?.id, pwd })
+        } 
+        body.id = model?.id
+        const { status } = await httpService.post(endPoint, body)
+        if (status === 200)
+          navigate("/administracion/usuarios")
+      }
+    } catch (error) {
+      console.log("errores",error)
+    } finally {
+      setGuardando(false)
+    }
+    
+  };
 
   const onFinishFailed = ({ values, errorFields, outOfDate }) => {
     message.warning({
@@ -202,7 +195,7 @@ const UsuarioDetalle = () => {
           <Col span={12} style={switchPass||!editando ? null: {display:"none"}}>
             <Form.Item
               label="Contraseña"
-              name="password"
+              name="pwd"
               rules={[
                 {
                   required: !editando||switchPass,
@@ -247,10 +240,10 @@ const UsuarioDetalle = () => {
                 },
                 ({ getFieldValue }) => ({
                   validator(_, value) {
-                    if (!value || getFieldValue("PASS") === value) {
+                    if (!value || getFieldValue("pwd") === value) {
                       return Promise.resolve();
                     }
-                    console.log(getFieldValue("PASS"), value);
+                    console.log(getFieldValue("pwd"), value);
                     return Promise.reject(
                       new Error("Las contraseñas no coinciden.")
                     );
