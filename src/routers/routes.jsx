@@ -14,6 +14,7 @@ import {Usuarios, UsuarioDetalle} from "../views/admin/usuarios";
 import {Entradas, EntradaDetalle} from "../views/entradas";
 import { tipoUsuarios } from "../constants";
 import { Perfil } from "../views/perfil";
+import { ClienteDetalle, Clientes } from "../views/admin/clientes";
 
 
 const signOutRoute = () => {
@@ -85,6 +86,27 @@ const dashboardRoutes = [
           {
             path: "/detalle",
             element: UsuarioDetalle,
+          },
+        ],
+      },
+      {
+        layout: "dashboard",
+        path: "/clientes",
+        name: "Clientes",
+        icon: <UserOutlined />,
+        sidebar: "single",
+        routes: [
+          {
+            path: "/",
+            element: Clientes,
+          },
+          {
+            path: "/agregar",
+            element: ClienteDetalle,
+          },
+          {
+            path: "/detalle",
+            element: ClienteDetalle,
           },
         ],
       },
