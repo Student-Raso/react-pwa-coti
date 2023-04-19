@@ -1,8 +1,9 @@
 import { Spin } from "antd";
 import PropTypes from "prop-types";
 import ButtonGroup from "../ButtonGroup";
+import { Col } from "antd"
 
-const DefaultLayout = ({ children, btnGroup, viewLoading }) => {
+const DefaultLayout = ({ children, btnGroup, viewLoading, cotizacionInfo }) => {
 
   const text = viewLoading?.text || 'Cargando...';
   const size = viewLoading?.size || 'small' ;
@@ -23,16 +24,38 @@ const DefaultLayout = ({ children, btnGroup, viewLoading }) => {
     },
   };
 
+  const estiloCol = {
+    display: "flex",
+    justifyContent: "flex-end",
+    alignItems: "center",
+    marginRight: 15,
+  }
+
   return (
     <>
       <Spin spinning={spinning} tip={text} size={size}>
-      {Boolean(btnGroup) && (
-        <div style={ styles.buttons }>
-          <ButtonGroup data={btnGroup} />
-        </div>
-      )}
-      <div style={styles.content}>{children}</div>
-    </Spin>
+        {Boolean(cotizacionInfo) && (
+          <>
+            <Col style={estiloCol}>
+              <p><strong>{cotizacionInfo.cotizacion}</strong>{cotizacionInfo.folio}</p>
+            </Col>
+            <Col style={estiloCol}>
+              <p><strong>{cotizacionInfo.empresa}</strong>{cotizacionInfo.nombreEmpresa}</p>
+            </Col>
+            <Col style={estiloCol}>
+              <p><strong>{cotizacionInfo.cliente}</strong>{cotizacionInfo.clienteNombre}</p>
+            </Col>
+          </>
+        )
+
+        }
+        {Boolean(btnGroup) && (
+          <div style={styles.buttons}>
+            <ButtonGroup data={btnGroup} />
+          </div>
+        )}
+        <div style={styles.content}>{children}</div>
+      </Spin>
     </>
   );
 };

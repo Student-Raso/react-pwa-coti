@@ -35,20 +35,20 @@ const Usuarios = () => {
         <ActionsButton
           data={[
             {
-              label: "Editar",
+              name: "Editar",
               onClick: () => {
                 navigate(`/administracion/usuarios/detalle?id=${item?.id}`)
               }
             },
             {
-              label: "Eliminar",
+              name: "Eliminar",
               onClick: () => {
                 eliminarRegistro(
                   item?.nombre, item?.id, endPoint,
                   () => tablaRef?.current?.refresh()
                 )
               },
-              danger: true,
+              styleProps: { color: '#ff4d4f' }
             },
           ]}
         />

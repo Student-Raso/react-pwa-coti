@@ -62,31 +62,29 @@ const CotizacionListado = () => {
       align: 'center',
       render: (_, item) => (
         <ActionsButton
-          key={item.id}
-          text={"Acción"}
-          options={[
+          data={[
             {
-              name: 'Editar',
+              label: 'Editar',
               icon: <EditOutlined/>,
               onClick: () =>  {navigate(`/cotizaciones/editar?id=${item.id}`)}
             },
             {
-              name: 'Ver Información',
+              label: 'Ver Información',
               icon: <InfoCircleOutlined />,
               onClick: () => console.log(item)
             },
             {
-              name: 'Imprimir PDF',
+              label: 'Imprimir PDF',
               icon: <PrinterOutlined />,
               onClick: () => onPrint(item),
             },
             {
-              name: 'Facturar',
+              label: 'Facturar',
               icon: <AuditOutlined/>,
               onClick: () =>  {navigate(`/facturaciones/facturar-cotizacion?idCotizacion=${item.id}`)}
             },
             {
-              name: 'Eliminar',
+              label: 'Eliminar',
               icon: <DeleteOutlined />,
               onClick: () => {
                 eliminarRegistro(item?.folio, item?.id, endPoint, () => {
@@ -103,31 +101,51 @@ const CotizacionListado = () => {
       title: 'ID',
       dataIndex: 'id',
       key: 'id',
-      render: (item) => item ? item : defaultText
+      render: (_, item) => (
+        <Link to={`/cotizaciones/editar?id=${item?.id}`} style={{ color: "black" }}>
+          {item?.id}
+        </Link>
+      )
     },
     {
       title: 'Folio',
       dataIndex: 'folio',
       key: 'folio',
-      render: defaultText,
+      render: (_, item) => (
+        <Link to={`/cotizaciones/editar?id=${item?.id}`} style={{ color: "black" }}>
+          {item?.folio}
+        </Link>
+      )    
     },
     {
       title: 'Cliente',
       dataIndex: 'cliente',
       key: 'cliente',
-      render: (item) => item?.nombre ? item?.nombre : defaultText,
+      render: (_, item) => (
+        <Link to={`/cotizaciones/editar?id=${item?.id}`} style={{ color: "black" }}>
+          {item?.cliente?.nombre}
+        </Link>
+      )
     },
     {
       title: 'Empresa',
       dataIndex: 'empresa',
       key: 'empresa',
-      render: (item) => item?.nombre ? item?.nombre : defaultText,
+      render: (_, item) => (
+        <Link to={`/cotizaciones/editar?id=${item?.id}`} style={{ color: "black" }}>
+          {item?.empresa?.nombre}
+        </Link>
+      )
     },
     {
       title: 'Vigencia',
       dataIndex: 'vigencia',
       key: 'vigencia',
-      render: defaultText,
+      render: (_, item) => (
+        <Link to={`/cotizaciones/editar?id=${item?.id}`} style={{ color: "black" }}>
+          {item?.vigencia}
+        </Link>
+      )
     },
     {
       title: 'Estatus',
@@ -153,8 +171,8 @@ const CotizacionListado = () => {
 
   return (
     <SimpleTableLayout
-    onSearch={setBuscarValue}
-    btnGroup={{btnGroup}}
+      onSearch={setBuscarValue}
+      btnGroup={{ btnGroup }}
     >
       <Tabla
         innerRef={tablaRef}
@@ -162,7 +180,7 @@ const CotizacionListado = () => {
         extraParams={{ buscar: buscarValue }}
         columns={columns}
         expand='cliente,empresa'
-        scroll={{  x: 'width: 30vw' }}
+        scroll={{ x: 'width: 30vw' }}
       />
     </SimpleTableLayout>
   )
