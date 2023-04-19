@@ -37,7 +37,7 @@ const CotizacionListado = () => {
     },
     {
       id: 1,
-      onClick: () => navigate('cotizaciones/nuevo'),
+      onClick: () => navigate('/cotizaciones/nuevo'),
       props: { disabled: false, type: 'primary' },
       text: 'Agregar',
       icon: <PlusOutlined />,
