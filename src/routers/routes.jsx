@@ -13,6 +13,7 @@ import {NoEncontrado, NoAutorizado} from "../views/error";
 import {Inicio} from "../views/inicio";
 import {Usuarios, UsuarioDetalle} from "../views/admin/usuarios";
 import { Perfil } from "../views/perfil";
+import { ClienteDetalle, Clientes } from "../views/admin/clientes";
 import { CotizacionDetalle, CotizacionListado } from "../views/cotizaciones";
 
 
@@ -120,6 +121,27 @@ const dashboardRoutes = [
           {
             path: "/detalle",
             element: UsuarioDetalle,
+          },
+        ],
+      },
+      {
+        layout: "dashboard",
+        path: "/clientes",
+        name: "Clientes",
+        icon: <UserOutlined />,
+        sidebar: "single",
+        routes: [
+          {
+            path: "/",
+            element: Clientes,
+          },
+          {
+            path: "/agregar",
+            element: ClienteDetalle,
+          },
+          {
+            path: "/detalle",
+            element: ClienteDetalle,
           },
         ],
       },
