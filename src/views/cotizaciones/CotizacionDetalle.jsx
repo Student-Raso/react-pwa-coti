@@ -19,19 +19,16 @@ import ImgCrop from 'antd-img-crop';
 
 import {
   ArrowLeftOutlined,
-  ShopOutlined,
   SaveOutlined,
-  FileAddOutlined,
   CloseOutlined,
   PlusCircleOutlined
 } from '@ant-design/icons';
 
 import { useNavigate } from 'react-router-dom';
 import DefaultLayout from '../../components/layouts/DefaultLayout';
-import { useQuery, useModel, useModels } from "../../hooks";
+import { useQuery, useModel } from "../../hooks";
 import moment from "moment";
-import locale from 'antd/lib/date-picker/locale/es_ES'
-import { abrirArchivo } from "../../utilities";
+import locale from 'antd/lib/date-picker/locale/es_ES';
 import 'moment/locale/es-mx';
 import httpService from '../../services/httpService';
 import { Select } from '../../components';

@@ -6,6 +6,8 @@ import React from "react";
 import * as ExcelJS from 'exceljs'; // lib: exceljs
 import { saveAs } from 'file-saver';  //lib: file-saver
 import imageToBase64 from 'image-to-base64/browser';  //lib: image-to-base64
+import { Link } from "react-router-dom";
+import { Tooltip } from 'antd';
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
@@ -601,6 +603,22 @@ const Roles = [
   {value: "usuario", label:"Usuario"},
 ];
 
+const { lastPath } = lastPathName();
+
+const linkText = (value, row, key, columns) => (
+  <Link to={`/administracion/${lastPath}/detalle?id=${row.id}`}>
+    {
+      
+      isEllipsis(columns, key)
+        ? <Tooltip title={value}>
+          {value}
+        </Tooltip>
+      : value
+    }
+  </Link>
+);
+
+
 export {
   agregarFaltantes,
   capitalizeFirst,
@@ -627,4 +645,5 @@ export {
   reporteExcelES,
   ValidarContrasena,
   Roles,
+  linkText
 };

@@ -143,8 +143,8 @@ const DashboardLayout = ({ children }) => {
         if (path !== undefined) {
           ruta += path?.path;
           rutas.push({
-            name: path?.name,
-            to: ruta,
+            title: path?.name,
+            path: ruta,
             icon: path?.icon,
           });
         }
@@ -157,7 +157,7 @@ const DashboardLayout = ({ children }) => {
     };
 
     let rutas = [
-      { name: "Inicio", to: "/", icon: <HomeOutlined /> },
+      { title: "Inicio", path: "/", icon: <HomeOutlined /> },
       ...rutasBreadCrumbs(dashboardRoutes, location?.pathname?.split("/")),
     ];
 
@@ -187,15 +187,9 @@ const DashboardLayout = ({ children }) => {
     setOpenKeys(tmpOpenKeys);
   }, [location]);
 
-  const filtroUsuarios = ({name, validRoles}) => {
-    if(!Boolean(validRoles)){
-      return true;
-    }
-    if(validRoles.includes(user?.TIPO)){
-      return true;
-    }
-
-    return false;
+  function itemRender(route) {
+    // const last = route.path === items[items.length - 1]?.path;
+    return  <Link id="RouterNavLink" to={route.path}>{route?.icon}<span> {route?.title} </span></Link>
   }
   
   if (!session && userLoading) return null;
@@ -238,19 +232,14 @@ const DashboardLayout = ({ children }) => {
               />
             </Col>
             <Col xs={20} sm={20} md={16} lg={16} xxl={16}>
-              <Breadcrumb style={dashStyles.breadcrumb}>
-                {breadcrumbItems?.map((item, index) => (
-                  <Breadcrumb.Item key={index}>
-                    <Link to={item?.to}>
-                      {item?.icon}
-                      <span> {item?.name} </span>
-                    </Link>
-                  </Breadcrumb.Item>
-                ))}
-              </Breadcrumb>
+              <Breadcrumb
+                style={dashStyles.breadcrumb} 
+                itemRender={itemRender}
+                items={breadcrumbItems}
+              />
             </Col>
             <Col xs={24} sm={24} md={6} lg={6} xxl={6} style={{...dashStyles.user, display: 'flex', justifyContent: 'flex-end'}}>
-              <Tooltip title={user?.EMAIL}>{`${user?.NOMBRE} ${user?.APELLIDOS}`}</Tooltip>
+              <Tooltip title={user?.nombre}>{`${user?.nombre}`}</Tooltip>
               <div style={{width:'15px'}}></div>
               <Dropdown style={{margin:'20px'}} menu={{ items }}>
                 <Avatar shape="square" size={40} icon={<UserOutlined />} />
