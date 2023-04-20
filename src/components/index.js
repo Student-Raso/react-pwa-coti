@@ -4,6 +4,7 @@ import FormItem from "./FormItem";
 import AppLoading from "./AppLoading";
 import ButtonGroup from "./ButtonGroup"
 import ActionsButton from "./ActionsButton";
+import Divider from "./Divider";
 
 export {
   Tabla,
@@ -12,4 +13,5 @@ export {
   AppLoading,
   ButtonGroup,
   ActionsButton,
+  Divider
 };

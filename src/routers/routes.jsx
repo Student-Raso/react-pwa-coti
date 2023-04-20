@@ -15,9 +15,7 @@ import {Usuarios, UsuarioDetalle} from "../views/admin/usuarios";
 import { Perfil } from "../views/perfil";
 import { ClienteDetalle, Clientes } from "../views/admin/clientes";
 import { CotizacionDetalle, CotizacionListado } from "../views/cotizaciones";
-
-
-
+import { EmpresaDetalle, EmpresaListado } from "../views/admin/empresas";
 
 const signOutRoute = () => {
   return "Cargando...";
@@ -142,6 +140,27 @@ const dashboardRoutes = [
           {
             path: "/detalle",
             element: ClienteDetalle,
+          },
+        ],
+      },
+      {
+        layout: "dashboard",
+        path: "/empresas",
+        name: "Empresas",
+        icon: <UserOutlined />,
+        sidebar: "single",
+        routes: [
+          {
+            path: "/",
+            element: EmpresaListado,
+          },
+          {
+            path: "/agregar",
+            element: EmpresaDetalle,
+          },
+          {
+            path: "/detalle",
+            element: EmpresaDetalle,
           },
         ],
       },

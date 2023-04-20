@@ -8,9 +8,7 @@ import {
   Input,
   message,
   Modal,
-  Divider,
   Table,
-  Select as AntSelect,
   Upload,
   DatePicker,
   Tooltip,
@@ -38,7 +36,6 @@ import 'moment/locale/es-mx';
 import httpService from '../../services/httpService';
 import { Select } from '../../components';
 
-
 const baseUrl = import.meta.env.VITE_API_URL;
 
 const CotizacionDetalle = () => {
@@ -51,12 +48,10 @@ const CotizacionDetalle = () => {
   const id = query.get("id");
   const editing = !!id;
 
-    // estados
-    const [loading, setLoading] = useState(false);
-    const [request, setRequest] = useState({});
-    const [clientes, setClientes] = useState({});
-    const [empresa, setEmpresa] = useState({});
-    const [productosTabla, setProductosTabla] = useState([]);
+  // estados
+  const [loading, setLoading] = useState(false);
+  const [request, setRequest] = useState({});
+  const [productosTabla, setProductosTabla] = useState([]);
 
       // selectores modal
   const [empresasSelect, setEmpresasSelect] = useState([])
@@ -84,18 +79,7 @@ const CotizacionDetalle = () => {
   
     const {
       model,
-      modelLoading,
     } = useModel(request);
-  
-    const {
-      clients,
-      clientsLoading,
-    } = useModels(clientes);
-    
-    const {
-      empres,
-      empresLoading,
-     } = useModels(empresa);
 
     const cotizacionInfo = {
       cotizacion: "Cotización: ",
@@ -224,59 +208,59 @@ const CotizacionDetalle = () => {
   ];
 
     // se procesa cada campo input de los productos y se gargan en la variable de estado
-    const cambio = (nombre, indice, valor) => {
-      //creamos copia de estado de tabla
-      let _productos = [...productosTabla]
-      
-      //acceder al Indice y cambiar valor
-      if (nombre === "cantidad" || nombre === "monto") {
-        _productos[indice][nombre] = parseFloat(valor)
+  const cambio = (nombre, indice, valor) => {
+    //creamos copia de estado de tabla
+    let _productos = [...productosTabla]
+
+    //acceder al Indice y cambiar valor
+    if (nombre === "cantidad" || nombre === "monto") {
+      _productos[indice][nombre] = parseFloat(valor)
+    } else {
+      _productos[indice][nombre] = valor
+    }
+
+    console.log("_productos: ", _productos)
+
+    // arreglo de productos
+    setProductosTabla(_productos);
+    // pasamos estado a calculo de tabla
+    calcularSubtotal(productosTabla);
+  }
+
+  const calcularSubtotal = (item) => {
+    //hay que pasar cada monto de cada producto, sumarlo y mostrar en un input o label
+    let _subTotal = item
+    let prod = 0;
+    let suma = 0;
+    let _iva = 0;
+    let _total = 0;
+
+    // console.log(_subTotal)
+    for (let i = 0; i < _subTotal.length; i++) {
+      //accedemos a posicion "monto"
+      if (_subTotal[i]?.cantidad === 1) {
+        prod = _subTotal[i]?.monto
       } else {
-        _productos[indice][nombre] = valor
+        prod = _subTotal[i]?.monto * _subTotal[i]?.cantidad
       }
-
-      console.log("_productos: ",_productos)
-      
-      // arreglo de productos
-      setProductosTabla(_productos);
-      // pasamos estado a calculo de tabla
-      calcularSubtotal(productosTabla);
+      suma = prod + suma;
     }
+    setSubTotal(suma);
 
-    const calcularSubtotal = (item) =>{
-      //hay que pasar cada monto de cada producto, sumarlo y mostrar en un input o label
-      let _subTotal = item
-      let prod = 0;
-      let suma = 0;
-      let _iva = 0;
-      let _total = 0;
-      
-      // console.log(_subTotal)
-      for (let i = 0; i < _subTotal.length; i++) {
-        //accedemos a posicion "monto"
-        if(_subTotal[i]?.cantidad === 1) {
-          prod = _subTotal[i]?.monto
-        }else{
-          prod = _subTotal[i]?.monto * _subTotal[i]?.cantidad
-        }
-        suma = prod + suma;
-      }
-      setSubTotal(suma);
-  
-      //calculo iva
-      _iva = suma * 0.16
-      setIva(_iva);
-  
-      //calculo total
-      _total = suma + _iva;
-      setTotal(_total)
-    }
+    //calculo iva
+    _iva = suma * 0.16
+    setIva(_iva);
 
-     //use Calllback
-  const setCopia = React.useCallback(()=>{
+    //calculo total
+    _total = suma + _iva;
+    setTotal(_total)
+  }
+
+  //use Calllback
+  const setCopia = React.useCallback(() => {
     setCopiaModel(model)
-  },[model]);
-  
+  }, [model]);
+
   // useCallback para setear cambio de imagenes
   const cambioImagenes = React.useCallback(()=>{
     let _arreglo = [];
@@ -377,7 +361,7 @@ const CotizacionDetalle = () => {
       let body = {
         nombre: item
       }
-      console.log(body)
+
       try {
         const resEmpresa = await httpService.post('empresa', body);
         
@@ -423,8 +407,6 @@ const CotizacionDetalle = () => {
         nombre: item,
         responsable: item2
       }
-
-      console.log(body);
       try {
         const resCliente = await httpService.post('cliente', body);
 
@@ -522,7 +504,6 @@ const CotizacionDetalle = () => {
     message.warning('Error al guardar: datos incompletos.');
     console.log(values, errorFields, outOfDate);
   };
-
   
   useEffect(() => {
     setRequest({
@@ -534,36 +515,6 @@ const CotizacionDetalle = () => {
       setRequest({})
     }
   }, [id])
-
-  useEffect(() => {
-    setClientes({
-      name: 'v1/cliente'
-    })
-    return () => {
-      setClientes({})
-    }
-  }, []);
-  
-  useEffect(() => {
-    setEmpresa({
-      name: 'v1/empresa',
-    })
-    return () => {
-      setEmpresa({})
-    }
-  }, []);
-  
-  // useEffect(()=>{
-  //   if(empres){
-  //     setEmpresasSelect(empres)
-  //   }
-  // },[empres])
-
-  // useEffect(()=>{
-  //   if(clients){
-  //     setClientesSelect(clients)
-  //   }
-  // },[clients])
 
   useEffect(() => {
     setCopia()
