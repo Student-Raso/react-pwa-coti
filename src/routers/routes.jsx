@@ -163,6 +163,7 @@ const dashboardRoutes = [
           },
           {
             path: "/detalle",
+            name: "Detalle",
             element: EmpresaDetalle,
           },
         ],

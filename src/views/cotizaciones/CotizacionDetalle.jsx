@@ -546,11 +546,12 @@ const CotizacionDetalle = () => {
         onFinishFailed={onFinishFailed}
       >
         <Modal
-          title="Intrioducir nueva empresa"
+          title="Introducir nueva empresa"
           centered
-          visible={visible}
+          open={visible}
           confirmLoading={guardarEmpresaLoading}
           okButtonProps={{ disabled: textInput.length > 0 ? false : true }}
+          footer={<div>{"Footer de Empresas"}</div>}
           onOk={() => {
             const _empresas = [...empresasSelect]
             _empresas.push({
@@ -571,9 +572,9 @@ const CotizacionDetalle = () => {
         </Modal>
 
         <Modal
-          title="Intrioducir nuevo cliente"
+          title="Introducir nuevo cliente"
           centered
-          visible={visible2}
+          open={visible2}
           confirmLoading={guardarClienteLoading}
           okButtonProps={{ disabled: textInput2.length > 0 ? false : true }}
           onOk={() => {
