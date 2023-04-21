@@ -6,7 +6,9 @@ import {
   SettingOutlined,
   BarChartOutlined,
   CalculatorOutlined,
-  SlidersOutlined
+  SlidersOutlined,
+  ShopOutlined,
+  GiftOutlined
 } from "@ant-design/icons";
 
 import {NoEncontrado, NoAutorizado} from "../views/error";
@@ -16,6 +18,7 @@ import { Perfil } from "../views/perfil";
 import { ClienteDetalle, Clientes } from "../views/admin/clientes";
 import { CotizacionDetalle, CotizacionListado } from "../views/cotizaciones";
 import { EmpresaDetalle, EmpresaListado } from "../views/admin/empresas";
+import { ProductoDetalle, ProductoListado } from "../views/admin/productos";
 
 const signOutRoute = () => {
   return "Cargando...";
@@ -147,7 +150,7 @@ const dashboardRoutes = [
         layout: "dashboard",
         path: "/empresas",
         name: "Empresas",
-        icon: <UserOutlined />,
+        icon: <ShopOutlined />,
         sidebar: "single",
         routes: [
           {
@@ -161,6 +164,27 @@ const dashboardRoutes = [
           {
             path: "/detalle",
             element: EmpresaDetalle,
+          },
+        ],
+      },
+      {
+        layout: "dashboard",
+        path: "/productos",
+        name: "Productos",
+        icon: <GiftOutlined />,
+        sidebar: "single",
+        routes: [
+          {
+            path: "/",
+            element: ProductoListado,
+          },
+          {
+            path: "/agregar",
+            element: ProductoDetalle,
+          },
+          {
+            path: "/detalle",
+            element: ProductoDetalle,
           },
         ],
       },

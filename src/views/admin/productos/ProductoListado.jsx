@@ -1,16 +1,16 @@
 import React, { useRef, useState } from 'react'
 import { PlusOutlined } from "@ant-design/icons";
-import { Tabla } from '../../../components'
+import { Tabla } from '../../../components';
 import { SimpleTableLayout } from '../../../components/layouts'
 import { ActionsButton } from '../../../components';
 import { lastPathName, eliminarRegistro, linkText } from "../../../utilities";
 import { useNavigate } from 'react-router-dom';
 import { Image } from "antd"
 
-const EmpresaListado = () => {
+const ProductoListado = () => {
 
-  const endPoint = "v1/empresa";
-  
+  const endPoint = "v1/cotizacion-producto";
+
   let tablaRef = useRef(null);
   const navigate = useNavigate();
   const { lastPath } = lastPathName();
@@ -58,25 +58,19 @@ const EmpresaListado = () => {
         />
       ),
     },
-    { title: "Nombre", key: "nombre", dataIndex: "nombre", render: newTextLink},
-    { title: "Logo", key: "logo", dataIndex: "logo", 
-    render: (_, item)=>(
-      item?.logo
-      ?
-      <Image
-        height={50}
-        src={`${item?.logo}`}
-      />
-     :
-      <Image
-        height={50}
-        src="/assets/imagen-no-disponible.png"
-      />
-    )
-    },
-    { title: "Corrreo", key: "correo", dataIndex: "correo", render: newTextLink}
+    { title: "Nombre", key: "producto", dataIndex: "producto", render: newTextLink},
+    { title: "Monto Unitario", key: "monto", dataIndex: "monto", render: newTextLink},
+    { title: "Cantidad", key: "cantidad", dataIndex: "cantidad", render: newTextLink},
+    { title: "Imagen", key: "imagen", dataIndex: "imagen", 
+      render: (_, item)=>(
+        <Image
+          height={50}
+          placeholder="/assets/imagen-no-disponible.png"
+          src={`${item?.imagen}`}
+        />
+      )
+    }
   ];
-
 
   return (
     <SimpleTableLayout
@@ -96,4 +90,4 @@ const EmpresaListado = () => {
   )
 }
 
-export default EmpresaListado
+export default ProductoListado

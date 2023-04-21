@@ -603,21 +603,19 @@ const Roles = [
   {value: "usuario", label:"Usuario"},
 ];
 
-const { lastPath } = lastPathName();
-
-const linkText = (value, row, key, columns) => (
-  <Link to={`/administracion/${lastPath}/detalle?id=${row.id}`}>
+const linkText = (value, row, key, columns, path) => {
+  return (
+    <Link to={`/administracion/${path}/detalle?id=${row.id}`} style={{color: "black"}}>
     {
-      
       isEllipsis(columns, key)
-        ? <Tooltip title={value}>
+      ? <Tooltip title={value}>
           {value}
         </Tooltip>
       : value
     }
   </Link>
-);
-
+  )
+};
 
 export {
   agregarFaltantes,

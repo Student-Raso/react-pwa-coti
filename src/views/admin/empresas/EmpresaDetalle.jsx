@@ -10,8 +10,7 @@ import {
   Select
 } from 'antd';
 
-import {
-  ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, SaveOutlined } from '@ant-design/icons';
 
 import {useNavigate} from 'react-router-dom';
 import { DefaultLayout } from '../../../components/layouts';
@@ -171,7 +170,6 @@ const EmpresaDetalle = () => {
         onFinish={onFinish}
         onFinishFailed={onFinishFailed}
       >
-
         <Row gutter={{ xs: 10, sm: 10, md: 10, lg: 10 }}>
           
           <Col

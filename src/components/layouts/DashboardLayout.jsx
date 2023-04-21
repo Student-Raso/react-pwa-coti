@@ -161,7 +161,7 @@ const DashboardLayout = ({ children }) => {
       ...rutasBreadCrumbs(dashboardRoutes, location?.pathname?.split("/")),
     ];
 
-    setTitulo(rutas[rutas?.length - 1]?.name);
+    setTitulo(rutas[rutas?.length - 1]?.title);
     setBreadcrumbItems(rutas);
   }, [location?.pathname]);
 
