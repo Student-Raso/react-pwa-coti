@@ -62,7 +62,7 @@ const ProductoListado = () => {
     { title: "Monto Unitario", key: "monto", dataIndex: "monto", render: newTextLink},
     { title: "Cantidad", key: "cantidad", dataIndex: "cantidad", render: newTextLink},
     { title: "Imagen", key: "imagen", dataIndex: "imagen", 
-      render: (_, item)=>(
+      render: (_, item) => (
         <Image
           height={50}
           placeholder="/assets/imagen-no-disponible.png"

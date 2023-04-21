@@ -64,7 +64,6 @@ const ProductoDetalle = () => {
   ];
 
   const onFinish = async (values) => {
-  
     try {
       setGuardando(true);
       const body = {
@@ -72,14 +71,15 @@ const ProductoDetalle = () => {
         imagen: imageUrl
       }
 
-    if(editando) {
-      body.id = id;
-      body.image = imageUrl
-    }
+      if (editando) {
+        body.id = id;
+        body.imagen = imageUrl
+      }
 
+      delete body.img;
       const resp = await httpService.post(endPoint, body);
       respuestas(resp);
-      if(resp?.status === 200) {
+      if (resp?.status === 200) {
         navigate(`/administracion/${beforePath}`);
       }
 
@@ -121,11 +121,21 @@ const ProductoDetalle = () => {
     const imgWindow = window.open(src);
     imgWindow?.document.write(image.outerHTML);
   };
+
+  const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    console.log("131 ",file);
+    if(file){
+      reader.readAsDataURL(file);
+    }
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+  });
   
-  const onChange = ({ fileList: newFileList }) => {
+  const onChange = async ({ fileList: newFileList }) => {
+    let file = await toBase64(newFileList[0]?.originFileObj)
     setFileList(newFileList);
-    newFileList.length > 0 ? console.log(newFileList[0]) : console.log("nothing")
-    setImageUrl(newFileList[0])
+    setImageUrl(file);
   };
 
   const uploadButton = (
@@ -227,7 +237,7 @@ const ProductoDetalle = () => {
           >
             <Form.Item
               label="Imagen"
-              name="imagen"
+              name="img"
             >
                 <Upload
                   action=""
