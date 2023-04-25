@@ -1,7 +1,8 @@
 import { Spin } from "antd";
 import PropTypes from "prop-types";
 import ButtonGroup from "../ButtonGroup";
-import { Col } from "antd"
+import { Col, Row, Typography } from "antd";
+const { Text } = Typography;
 
 const DefaultLayout = ({ children, btnGroup, viewLoading, cotizacionInfo }) => {
 
@@ -22,38 +23,38 @@ const DefaultLayout = ({ children, btnGroup, viewLoading, cotizacionInfo }) => {
       padding: 10,
       borderRadius: 6,
     },
+    data: {
+      background: "#fff",
+      display: "flex",
+      justifyContent: "flex-end",
+      alignItems: "left",
+    }
   };
-
-  const estiloCol = {
-    display: "flex",
-    justifyContent: "flex-end",
-    alignItems: "center",
-    marginRight: 15,
-  }
 
   return (
     <>
       <Spin spinning={spinning} tip={text} size={size}>
-        {Boolean(cotizacionInfo) && (
-          <>
-            <Col style={estiloCol}>
-              <p><strong>{cotizacionInfo.cotizacion}</strong>{cotizacionInfo.folio}</p>
-            </Col>
-            <Col style={estiloCol}>
-              <p><strong>{cotizacionInfo.empresa}</strong>{cotizacionInfo.nombreEmpresa}</p>
-            </Col>
-            <Col style={estiloCol}>
-              <p><strong>{cotizacionInfo.cliente}</strong>{cotizacionInfo.clienteNombre}</p>
-            </Col>
-          </>
-        )
+        <Row style={styles.data}>
+          {Boolean(cotizacionInfo) && (
+            <>
+              <Col span={6}>
+                <Text ><strong>{cotizacionInfo.cotizacion}</strong>{cotizacionInfo.folio}</Text>
+              </Col>
+              <Col span={6}>
+                <Text><strong>{cotizacionInfo.empresa}</strong>{cotizacionInfo.nombreEmpresa}</Text>
+              </Col>
+              <Col span={6}>
+                <Text><strong>{cotizacionInfo.cliente}</strong>{cotizacionInfo.clienteNombre}</Text>
+              </Col>
+            </>
+          )}
 
-        }
-        {Boolean(btnGroup) && (
-          <div style={styles.buttons}>
-            <ButtonGroup data={btnGroup} />
-          </div>
-        )}
+          {Boolean(btnGroup) && (
+            <div style={styles.buttons}>
+              <ButtonGroup data={btnGroup} />
+            </div>
+          )}
+        </Row>
         <div style={styles.content}>{children}</div>
       </Spin>
     </>

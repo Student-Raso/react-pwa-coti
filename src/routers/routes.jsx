@@ -16,9 +16,9 @@ import {Inicio} from "../views/inicio";
 import {Usuarios, UsuarioDetalle} from "../views/admin/usuarios";
 import { Perfil } from "../views/perfil";
 import { ClienteDetalle, Clientes } from "../views/admin/clientes";
-import { CotizacionDetalle, CotizacionListado } from "../views/cotizaciones";
 import { EmpresaDetalle, EmpresaListado } from "../views/admin/empresas";
 import { ProductoDetalle, ProductoListado } from "../views/admin/productos";
+import { CotizacionDetalle, CotizacionListado } from "../views/cotizaciones/";
 
 const signOutRoute = () => {
   return "Cargando...";

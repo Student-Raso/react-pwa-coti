@@ -21,7 +21,8 @@ import {
   ArrowLeftOutlined,
   SaveOutlined,
   CloseOutlined,
-  PlusCircleOutlined
+  PlusCircleOutlined,
+  FilePdfOutlined
 } from '@ant-design/icons';
 
 import { useNavigate } from 'react-router-dom';
@@ -32,14 +33,16 @@ import locale from 'antd/lib/date-picker/locale/es_ES';
 import 'moment/locale/es-mx';
 import httpService from '../../services/httpService';
 import { Select } from '../../components';
+import ClienteForm from '../admin/clientes/ClienteForm';
+import { EmpresaDetalle } from '../admin/empresas';
 
 const baseUrl = import.meta.env.VITE_API_URL;
 
 const CotizacionDetalle = () => {
 
   const basePdf = `${baseUrl}/pdf/`
-  const navigate = useNavigate();
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const query = useQuery();
   const id = query.get("id");
@@ -49,20 +52,11 @@ const CotizacionDetalle = () => {
   const [loading, setLoading] = useState(false);
   const [request, setRequest] = useState({});
   const [productosTabla, setProductosTabla] = useState([]);
-
-      // selectores modal
-  const [empresasSelect, setEmpresasSelect] = useState([])
-  const [clientesSelect, setClientesSelect] = useState([])
-  const [visible, setVisible] = useState(false);
-  const [visible2, setVisible2] = useState(false);
-  const [textInput, setTextInput] = useState("");
-  const [textInput2, setTextInput2] = useState("");
+  const [empresaValue, setEmpresaValue] = useState(null);
+  const [clienteValue, setClienteValue] = useState(null);
+  const [openEmpresa, setOpenEmpresa] = useState(false);
+  const [openCliente, setOpenCliente] = useState(false);
   const [arrImagenes, setArrImagenes] = useState([]);
-
-    // estados guardar empresa
-    const [guardarEmpresaLoading,setGuardarEmpresaLoading] = useState(false);
-    const [guardarClienteLoading,setGuardarClienteLoading] = useState(false);
-    const [clienteResponsable, setClienteResponsable] = useState("");
   
     // estados calculos
     const [subTotal,setSubTotal] = useState(0);
@@ -96,111 +90,121 @@ const CotizacionDetalle = () => {
     }), []);
   
 
-    const btnGroup = [
-      {
-        id: 1,
-        onClick: () => {
-          navigate(`/cotizaciones`);
-        },
-        props: { disabled: false, type: "primary" },
-        text: "Volver",
-        icon: <ArrowLeftOutlined />,
+  let btnGroup = [
+    {
+      id: 1,
+      onClick: () => {
+        navigate(`/cotizaciones`);
       },
-    ];
+      props: { disabled: false, type: "primary" },
+      text: "Volver",
+      icon: <ArrowLeftOutlined />,
+    },
+  ];
 
-    const columns = [
-      {
-        title: 'Acciones',
-        key: 'id',
-        dataIndex: 'id',
-        width: 100,
-        align: 'center',
-        render: (_, item) => (
-          <Row gutter={5}>
-            <Button 
-                danger
-                icon={<CloseOutlined/>}
-                key={item}
-                onClick={() => {
-                  eliminarProducto(item)
-                }}
-            />
-          </Row>
-        )
-      },
-      {
-        title: 'Cantidad',
-        dataIndex: 'cantidad',
-        key: 'cantidad',
-        render: (_, item, index) => (
-          <InputNumber
-            key={'cantidad'+index}
-            min={0}
-            defaultValue={item?.cantidad}
-            onChange={(e)=> {
-              cambio('cantidad', index, e);
-            }}
-            type={'number'}
-          />
-        ),
-      },
-      {
-        title: 'Concepto',
-        dataIndex: 'producto',
-        key: 'producto',
-        width: 500,
-        render: (_, item, index) => (
-          <Input
-            size='small'
-            key={'producto'+index}
-            defaultValue={item?.producto}
-            onChange={(e)=> cambio('producto', index, e?.target?.value)}
-            maxLength={10000}
-            type={'text'}
-          />
-        ),
-      },
-      {
-        title: 'Precio Unitario',
-        dataIndex: 'monto',
-        key: 'monto',
-        render: (_, item, index) => (
-          <InputNumber
-            key={'monto'+index}
-            min={0}
-            defaultValue={editing ? item?.monto : 0}
-            type={'number'}
-            step={0.01}
-            onChange={(e)=> {
-              cambio('monto', index, e);
+  if (model) {
+    btnGroup.push({
+      id: 2,
+      onClick: () => window.open(`${basePdf}cotizacion?id=${model?.id}`),
+      props: { color: '#ff4d4f' },
+      text: "Imprimir PDF",
+      icon: <FilePdfOutlined />,
+    })
+  } 
+
+  const columns = [
+    {
+      title: 'Acciones',
+      key: 'id',
+      dataIndex: 'id',
+      width: 100,
+      align: 'center',
+      render: (_, item) => (
+        <Row gutter={5}>
+          <Button
+            danger
+            icon={<CloseOutlined />}
+            key={item}
+            onClick={() => {
+              eliminarProducto(item)
             }}
           />
-        ),
-      },
-      {
-        title: 'Imagen',
-        dataIndex: 'imagen',
-        key: 'imagen',
-        render: (_, item, indice) => (
-          <ImgCrop>
-            <Upload
-              gutter={4}
-              fileList={arrImagenes[indice] || []}
-              beforeUpload={()=>true}
-              action=""
-              listType="picture-card"
-              maxCount={1}
-              onChange={(e)=> cambioImg(e, indice)}
-              multiple={false}
-              >
-                <Button
-                  type='text'
-                >
-                  Elegir Imagen
-                </Button>
-            </Upload>
-          </ImgCrop>
-        ),
+        </Row>
+      )
+    },
+    {
+      title: 'Cantidad',
+      dataIndex: 'cantidad',
+      key: 'cantidad',
+      render: (_, item, index) => (
+        <InputNumber
+          key={'cantidad' + index}
+          min={0}
+          defaultValue={item?.cantidad}
+          onChange={(e) => {
+            cambio('cantidad', index, e);
+          }}
+          type={'number'}
+        />
+      ),
+    },
+    {
+      title: 'Concepto',
+      dataIndex: 'producto',
+      key: 'producto',
+      width: 500,
+      render: (_, item, index) => (
+        <Input
+          size='small'
+          key={'producto' + index}
+          defaultValue={item?.producto}
+          onChange={(e) => cambio('producto', index, e?.target?.value)}
+          maxLength={10000}
+          type={'text'}
+        />
+      ),
+    },
+    {
+      title: 'Precio Unitario',
+      dataIndex: 'monto',
+      key: 'monto',
+      render: (_, item, index) => (
+        <InputNumber
+          key={'monto' + index}
+          min={0}
+          defaultValue={editing ? item?.monto : 0}
+          type={'number'}
+          step={0.01}
+          onChange={(e) => {
+            cambio('monto', index, e);
+          }}
+        />
+      ),
+    },
+    {
+      title: 'Imagen',
+      dataIndex: 'imagen',
+      key: 'imagen',
+      render: (_, item, indice) => (
+        <ImgCrop>
+          <Upload
+            gutter={4}
+            fileList={arrImagenes[indice] || []}
+            beforeUpload={() => true}
+            action=""
+            listType="picture-card"
+            maxCount={1}
+            onChange={(e) => cambioImg(e, indice)}
+            multiple={false}
+          >
+            <Button
+              type='text'
+            >
+              Elegir Imagen
+            </Button>
+          </Upload>
+        </ImgCrop>
+      ),
     },
   ];
 
@@ -349,98 +353,7 @@ const CotizacionDetalle = () => {
       const element = _arregloImagenes[ind];
       console.log(element)
     }
-  }
-
-  const guardarEmpresa = async (item) => {
-    if (item!==null) {
-      setGuardarEmpresaLoading(true)
-      
-      let body = {
-        nombre: item
-      }
-
-      try {
-        const resEmpresa = await httpService.post('empresa', body);
-        
-        if (resEmpresa) {
-          //Si estatus 400 y "errores" es diferente a nulo
-          if (resEmpresa?.status === 400 && resEmpresa?.errores !== null) {
-            const newArray = Object.values(resEmpresa?.errores);
-            Modal.error({
-              title: resEmpresa?.mensaje,
-              content: (
-                <div>{newArray.map((m, i) =>
-                  <span key={(i + 1)}> -{m} <br />
-                  </span>)
-                }</div>
-              )
-            });
-            //cuando el dato ya existe no se puede guardar en BD
-          } else if (resEmpresa?.status === 400 && resEmpresa?.errores === null) {
-            message.error({
-              content: resEmpresa?.mensaje,
-              style: { marginTop: '20vh' },
-            });
-            //todo salió bien
-          } else if (resEmpresa?.status === 200) {
-            message.success({
-              content: resEmpresa?.mensaje,
-              style: { marginTop: '20vh' }
-            });
-          }
-        }
-      } catch (e) {
-        console.log("Error al guardar Empresa: ", e);
-      } finally {
-        setGuardarEmpresaLoading(false)
-      }
-    }
-  }
-  
-  const guardarCliente = async (item, item2) =>{
-    if (item!==null&&item2!==null) {
-      setGuardarClienteLoading(true)
-      let body = {
-        nombre: item,
-        responsable: item2
-      }
-      try {
-        const resCliente = await httpService.post('cliente', body);
-
-        if (resCliente) {
-          //Si estatus 400 y "errores" es diferente a nulo
-        if (resCliente?.status === 400 && resCliente?.errores !== null) {
-            const newArray = Object.values(resCliente?.errores);
-            Modal.error({
-              title: resCliente?.mensaje,
-              content: (
-                <div>{newArray.map((m, i) =>
-                  <span key={(i + 1)}> -{m} <br />
-                  </span>)
-                }</div>
-              )
-            });
-            //cuando el dato ya existe no se puede guardar en BD
-          } else if (resCliente?.status === 400 && resCliente?.errores === null) {
-            message.error({
-              content: resCliente?.mensaje,
-              style: { marginTop: '20vh' },
-            });
-            //todo salió bien
-          } else if (resCliente?.status === 200) {
-            message.success({
-              content: resCliente?.mensaje,
-              style: { marginTop: '20vh' }
-            });
-          }
-        }
-      } catch (e) {
-        console.log("Error al guardar Cliente: ", e);
-      } finally {
-        setGuardarClienteLoading(false)
-      }
-    }
-  }
+  };
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -495,7 +408,7 @@ const CotizacionDetalle = () => {
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   const onFinishFailed = ({ values, errorFields, outOfDate }) => {
     message.warning('Error al guardar: datos incompletos.');
@@ -511,7 +424,19 @@ const CotizacionDetalle = () => {
     return () => {
       setRequest({})
     }
-  }, [id])
+  }, [id]);
+
+  useEffect(() => {
+    if (empresaValue && empresaValue !== null) {
+      setOpenEmpresa(false);
+    }
+  }, [empresaValue])
+
+  useEffect(() => {
+    if (clienteValue && clienteValue !== null) {
+      setOpenCliente(false);
+    }
+  }, [clienteValue])
 
   useEffect(() => {
     setCopia()
@@ -536,7 +461,7 @@ const CotizacionDetalle = () => {
   return (
     <DefaultLayout
       btnGroup={{ btnGroup }}
-      cotizacionInfo={cotizacionInfo}
+      cotizacionInfo={editing ? cotizacionInfo : null}
     >
       <Form
         form={form}
@@ -548,56 +473,26 @@ const CotizacionDetalle = () => {
         <Modal
           title="Introducir nueva empresa"
           centered
-          open={visible}
-          confirmLoading={guardarEmpresaLoading}
-          okButtonProps={{ disabled: textInput.length > 0 ? false : true }}
-          footer={<div>{"Footer de Empresas"}</div>}
-          onOk={() => {
-            const _empresas = [...empresasSelect]
-            _empresas.push({
-              key: textInput,
-              id: textInput,
-              nombre: textInput
-            })
-            setEmpresasSelect(_empresas)
-            setTextInput('');
-            setVisible(false);
-            guardarEmpresa(textInput)
-          }}
-          onCancel={() => setVisible(false)}
+          open={openEmpresa}
+          footer={false}
+          onCancel={() => setOpenEmpresa(false)}
+          width='80vw'
         >
-          <Input
-            onChange={e => setTextInput(e.target.value)}
+          <EmpresaDetalle
+            setEmpresaValue={setEmpresaValue}
           />
         </Modal>
 
         <Modal
           title="Introducir nuevo cliente"
           centered
-          open={visible2}
-          confirmLoading={guardarClienteLoading}
-          okButtonProps={{ disabled: textInput2.length > 0 ? false : true }}
-          onOk={() => {
-            const _clientes = [...clientesSelect]
-            _clientes.push({
-              key: textInput2,
-              id: textInput2,
-              nombre: textInput2
-            })
-            setClientesSelect(_clientes)
-            setTextInput2('')
-            setVisible2(false);
-            guardarCliente(textInput2, clienteResponsable)
-          }}
-          onCancel={() => setVisible2(false)}
+          open={openCliente}
+          footer={false}
+          onCancel={() => setOpenCliente(false)}
+          width='80vw'
         >
-          <Input
-            onChange={e => setTextInput2(e.target.value)}
-            placeholder="Cliente"
-          />
-          <Input
-            onChange={e => setClienteResponsable(e.target.value)}
-            placeholder="Responsable"
+          <ClienteForm
+            setClienteValue={setClienteValue}
           />
 
         </Modal>
@@ -606,12 +501,10 @@ const CotizacionDetalle = () => {
           {!editing && (
             <>
               <Col
-                className="gutter-row"
-                xs={22}
-                sm={22}
-                md={10}
-                lg={10}
-                xxl={10}
+                xs={{span: 22}}
+                sm={{span: 22}}
+                lg={{span: 10}}
+                xxl={{span: 10}}
               >
                 <Form.Item
                   label="Empresa"
@@ -621,31 +514,22 @@ const CotizacionDetalle = () => {
                   <Select
                     showSearch
                     modelsParams={requestEmpresa}
-                    placeholder={'Selecciona Empresa'}
                     labelProp={'nombre'}
                     valueProp={'id'}
+                    autoComplete={"off"}
+                    placeholder={'Selecciona Empresa'}
                     render={(_, row) => `${row?.nombre}`}
-                    onChange={(_, row) => {
-                      setEmpresasSelect(row);
-                      console.log(row);
-                    }}
+                    append={[empresaValue]}
                   />
                 </Form.Item>
               </Col>
 
-              <Col
-                className="gutter-row"
-                xs={2}
-                sm={2}
-              >
-                <Form.Item
-                  label="&nbsp;"
-                >
-                  <Tooltip
-                    title="Agregar"
-                  >
+              <Col span={2}>
+                <Form.Item label="&nbsp;">
+                  <Tooltip title="Agregar una Empresa">
                     <Button
-                      onClick={() => setVisible(true)}
+                      block
+                      onClick={() => setOpenEmpresa(true)}
                       icon={<PlusCircleOutlined />}
                     />
                   </Tooltip>
@@ -653,12 +537,10 @@ const CotizacionDetalle = () => {
               </Col>
 
               <Col
-                className="gutter-row"
-                xs={22}
-                sm={22}
-                md={10}
-                lg={10}
-                xxl={10}
+                xs={{ span: 22 }}
+                sm={{ span: 22 }}
+                lg={{ span: 10 }}
+                xxl={{ span: 10 }}
               >
                 <Form.Item
                   label="Cliente"
@@ -671,28 +553,18 @@ const CotizacionDetalle = () => {
                     labelProp={'nombre'}
                     valueProp={'id'}
                     render={(_, row) => `${row?.nombre}`}
-                    onChange={(_, row) => {
-                      setClientesSelect(row);
-                      console.log(row);
-                    }}
+                    append={[clienteValue]}
                   >
                   </Select>
                 </Form.Item>
               </Col>
 
-              <Col
-                className="gutter-row"
-                xs={2}
-                sm={2}
-              >
-                <Form.Item
-                  label="&nbsp;"
-                >
-                  <Tooltip
-                    title="Agregar"
-                  >
+              <Col span={2}>
+                <Form.Item label="&nbsp;">
+                  <Tooltip title="Agregar un Cliente" >
                     <Button
-                      onClick={() => setVisible2(true)}
+                      block
+                      onClick={() => setOpenCliente(true)}
                       icon={<PlusCircleOutlined />}
                     />
                   </Tooltip>

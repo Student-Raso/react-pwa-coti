@@ -11,7 +11,7 @@ function App() {
     <ConfigProvider locale={esES}
       theme={{
         token: {
-          colorPrimary: '#a02867',
+          colorPrimary: '#005aa4',
         },
       }}
     >

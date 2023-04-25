@@ -26,7 +26,7 @@ const rules = {
   }],
 };
 
-const EmpresaDetalle = () => {
+const EmpresaDetalle = ({ setEmpresaValue }) => {
 
   const endPoint = "v1/empresa";
 
@@ -76,7 +76,11 @@ const EmpresaDetalle = () => {
       const resp = await httpService.post(endPoint, body);
       respuestas(resp);
       if(resp?.status === 200) {
-        navigate(`/administracion/${beforePath}`);
+        if (Boolean(setEmpresaValue)) {
+          setEmpresaValue(resp?.detalle);
+        } else {
+          navigate(`/administracion/${beforePath}`);
+        }
       }
 
     } catch (error) {
@@ -139,7 +143,7 @@ const EmpresaDetalle = () => {
           {"Subir Imagen"}
         </div>
       </div>
-    );  
+    );
 
     // Setear form principal
     useEffect(() => {

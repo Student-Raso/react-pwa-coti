@@ -86,7 +86,8 @@ const Select = ({
       allowClear={true}
       style={{ width: '100%' }}
       loading={modelsLoading}
-      options={ models?.length > 0 && agregarFaltantes([...models], [...append], valueProp).map(i => ({
+      options={ models?.length > 0 && 
+        agregarFaltantes([...models], [...append], valueProp).map(i => ({
         ...i,
         label: render(i[labelProp], i),
         value: i[valueProp],
@@ -101,6 +102,7 @@ Select.propTypes = {
   labelProp: PropTypes.string.isRequired,
   valueProp: PropTypes.string.isRequired,
   render: PropTypes.func,
+  append: PropTypes.array,
   notIn: PropTypes.string,
   onDeselected: PropTypes.func,
   deleteSelected: PropTypes.string,
