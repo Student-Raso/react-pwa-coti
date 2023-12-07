@@ -73,7 +73,7 @@ const Ingresar = () => {
                 <Col span={24}>
                   <div style={SignInStyles.logoContainer}>
                     <h1>
-                    Desarrollo Político
+                    Razzor - Cotizaciones
                     </h1>
                   </div>
                 </Col>
