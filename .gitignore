@@ -27,6 +27,8 @@ chrome-user-data
 
 .firebase/*
 *lock*
+.env.development.local
+.env.production.local
 
 packages/react-devtools-core/dist
 packages/react-devtools-extensions/chrome/build
