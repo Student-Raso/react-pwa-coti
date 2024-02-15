@@ -113,7 +113,10 @@ const Perfil = () => {
             lg={{ span: 12 }}
           >
             <Form.Item label="E-mail" name="EMAIL">
-              <Input placeholder="E-mail" />
+              <Input 
+                placeholder="E-mail" 
+                autoComplete={"off"}
+              />
             </Form.Item>
           </Col>
           <Col
@@ -188,7 +191,7 @@ const Perfil = () => {
               ]}
             >
               <Input.Password
-                autoComplete={"off"}
+                autoComplete={"new-password"}
                 type="password"
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
